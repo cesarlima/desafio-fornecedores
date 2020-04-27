@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Application.Services;
 using Domain.Common.ValueObjects;
 using Domain.Empresas;
 using Domain.Fornecedores;
@@ -12,17 +13,20 @@ namespace Application.CasosDeUso.CadastrarFornecedor
         private readonly IFornecedorFactory _fornecedorFactory;
         private readonly IEmpresaRepositorio _empresaRepositorio;
         private readonly IFornecedorRepositorio _fornecedorRepositorio;
+        private readonly IUnitOfWork _unitOfWork;
 
 
         public CadastrarFornecedorCasoDeUso(IOutputPort outputPort,
             IFornecedorFactory fornecedorFactory,
             IEmpresaRepositorio empresaRepositorio,
-            IFornecedorRepositorio fornecedorRepositorio)
+            IFornecedorRepositorio fornecedorRepositorio,
+            IUnitOfWork unitOfWork)
         {
             _outputPort = outputPort ?? throw new ArgumentNullException(nameof(outputPort));
             _fornecedorFactory = fornecedorFactory ?? throw new ArgumentNullException(nameof(fornecedorFactory));
             _empresaRepositorio = empresaRepositorio ?? throw new ArgumentNullException(nameof(empresaRepositorio));
             _fornecedorRepositorio = fornecedorRepositorio ?? throw new ArgumentNullException(nameof(fornecedorRepositorio));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         public async Task Execute(CadastrarFornecedorInput input)
@@ -40,10 +44,13 @@ namespace Application.CasosDeUso.CadastrarFornecedor
              else
                 pessoa = CriarPessoaFisica(input);
 
-            
+
             if (_outputPort.Valid)
             {
-                
+                var empresa = await _empresaRepositorio.ObterEmpresa(input.EmpresaId);
+                var fornecedor = _fornecedorFactory.NovoFornecedor(empresa, pessoa);
+                await _fornecedorRepositorio.Salvar(fornecedor);
+                await _unitOfWork.Commit();
             }
         }
 

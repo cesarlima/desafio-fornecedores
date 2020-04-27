@@ -20,6 +20,12 @@ namespace Infra.Repositories
             return _context.Empresas.AnyAsync(x => x.CNPJ.Numero == cnpj);
         }
 
+        public async Task<Empresa> ObterEmpresa(Guid id)
+        {
+            var empresa = await _context.Empresas.FindAsync(id);
+            return empresa;
+        }
+
         public async Task Save(Empresa empresa)
         {
             await _context.AddAsync(empresa);
