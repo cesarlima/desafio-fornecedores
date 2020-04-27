@@ -25,6 +25,7 @@ namespace WebApi.ConfigExtensions
             services.AddScoped<Domain.Empresas.IEmpresaFactory, Infra.Entities.EntityFactories>();
             
 
+            services.AddScoped<Application.CasosDeUso.ListarEmpresas.ListarEmpresasCasoDeUso>();
             services.AddScoped<Application.CasosDeUso.CadastrarEmpresa.CadastrarEmpresaCasoDeUso>();
             services.AddScoped<Application.Services.IUnitOfWork, Infra.Transaction.UnitOfWork>();
         }

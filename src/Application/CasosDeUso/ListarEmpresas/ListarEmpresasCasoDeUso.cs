@@ -23,7 +23,7 @@ namespace Application.CasosDeUso.ListarEmpresas
 
             foreach (var emp in empresas)
             {
-                empresasOutput.Add(new Empresa(emp.Id, emp.CNPJ.ToString()));
+                empresasOutput.Add(new Empresa(emp.Id, emp.NomeFantasia));
             }
 
             _presenter.AddResult(new ListarEmpresaOutput(empresasOutput));
