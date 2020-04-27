@@ -51,6 +51,9 @@ namespace Application.CasosDeUso.CadastrarFornecedor
                 var fornecedor = _fornecedorFactory.NovoFornecedor(empresa, pessoa);
                 await _fornecedorRepositorio.Salvar(fornecedor);
                 await _unitOfWork.Commit();
+
+                var result = new CadastrarFornecedorOutput(fornecedor.Id, pessoa.Nome, pessoa.ObterNumeroCpfCnpj(), pessoa.DataCadastro);
+                _outputPort.AddResult(result);
             }
         }
 

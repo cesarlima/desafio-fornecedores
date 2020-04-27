@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.CasosDeUso.CadastrarFornecedor;
 using Application.Services;
+using Domain.Common.ValueObjects;
 using Domain.Empresas;
 using Domain.Fornecedores;
 using Infra.Entities;
@@ -17,8 +18,9 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         private readonly Mock<IFornecedorFactory> _pessoaFactoryMock = new Mock<IFornecedorFactory>();
         private readonly Mock<IFornecedorRepositorio> _fornecedorRepositorioMock = new Mock<IFornecedorRepositorio>();
         private readonly Mock<IEmpresaRepositorio> _empresaRepositorioMock = new Mock<IEmpresaRepositorio>();
-        private Mock<IUnitOfWork> _uow = new Mock<IUnitOfWork>();
-        private readonly IFornecedorFactory _pessoaFactory = new EntityFactories();
+        private readonly Mock<IUnitOfWork> _uowMock = new Mock<IUnitOfWork>();
+        private readonly IFornecedorFactory _fornecedorFactory = new EntityFactories();
+        private readonly IEmpresaFactory _empresaFactory = new EntityFactories();
 
         [Fact]
         public async Task Deve_Adicionar_Notificacao_Se_Fornecedor_Pessoa_Fisica_Sem_Rg_E_Sem_Data_Nascimento()
@@ -65,29 +67,37 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         public async Task Deve_Adicionar_Result_Corretamente()
         {
             var input = CriarCadastrarFornecedorInput();
-            var pessoaJuridica = _pessoaFactory.NovaPessoaJuridica(input.Nome, new Domain.Common.ValueObjects.CNPJ(input.CpfCnpj));
+            var cnpj = new Domain.Common.ValueObjects.CNPJ(input.CpfCnpj);
+            var pessoaJuridica = _fornecedorFactory.NovaPessoaJuridica(input.Nome, new Domain.Common.ValueObjects.CNPJ(input.CpfCnpj));
             var outputMock = new CadastrarFornecedorOutput(pessoaJuridica.Id, pessoaJuridica.Nome, pessoaJuridica.CNPJ.ToString(), pessoaJuridica.DataCadastro);
-            var sut = CriarSUT();
+            var sut = CriarSUT(fornecedorFactory:_fornecedorFactory);
+            //var empresa = _empresaFactory.NovaEmpresa("PR", "Engie",);
 
             _pessoaFactoryMock.Setup(f => f.NovaPessoaJuridica(input.Nome, new Domain.Common.ValueObjects.CNPJ(input.CpfCnpj))).Returns(pessoaJuridica);
+            _outputPortMock.Setup(p => p.Valid).Returns(true);
             CadastrarFornecedorOutput result = null;
             _outputPortMock.Setup(presenter => presenter.AddResult(It.IsAny<CadastrarFornecedorOutput>()))
            .Callback((CadastrarFornecedorOutput r) => result = r);
 
             await sut.Execute(input);
 
-            Assert.NotNull(result);
+            Assert.Equal(outputMock.Id, result?.Id);
+            Assert.Equal(outputMock.Nome, result?.Nome);
+            Assert.Equal(outputMock.CpfCnpj, result?.CpfCnpj);
+            Assert.Equal(outputMock.DataCadastro, result?.DataCadastro);
         }
 
-
-
-        private CadastrarFornecedorCasoDeUso CriarSUT()
+        private CadastrarFornecedorCasoDeUso CriarSUT(Mock<IOutputPort> outputPortMock = null,
+                                                      IFornecedorFactory fornecedorFactory = null,
+                                                      Mock<IEmpresaRepositorio> empresaRepositorioMock = null,
+                                                      Mock<IFornecedorRepositorio> fornecedorRepositorioMock = null,
+                                                      Mock<IUnitOfWork> uowMock = null)
         {
-            return new CadastrarFornecedorCasoDeUso(_outputPortMock.Object,
-                                                    _pessoaFactory,
-                                                    _empresaRepositorioMock.Object,
-                                                    _fornecedorRepositorioMock.Object,
-                                                    _uow.Object);
+            return new CadastrarFornecedorCasoDeUso(outputPortMock?.Object ?? _outputPortMock.Object,
+                                                    fornecedorFactory ?? _fornecedorFactory,
+                                                    empresaRepositorioMock?.Object ?? _empresaRepositorioMock.Object,
+                                                    fornecedorRepositorioMock?.Object ?? _fornecedorRepositorioMock.Object,
+                                                    uowMock?.Object ?? _uowMock.Object);
         }
 
         private CadastrarFornecedorInput CriarCadastrarFornecedorInput(Guid empresaId = new Guid(),
