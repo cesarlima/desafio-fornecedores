@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Domain.Common.ValueObjects;
+using Domain.Empresas;
 using Domain.Fornecedores;
 
 namespace Application.CasosDeUso.CadastrarFornecedor
@@ -8,13 +9,20 @@ namespace Application.CasosDeUso.CadastrarFornecedor
     public class CadastrarFornecedorCasoDeUso : IUseCase<CadastrarFornecedorInput>
     {
         private readonly IOutputPort _outputPort;
-        private readonly IPessoaFactory _pessoaFactory;
+        private readonly IFornecedorFactory _fornecedorFactory;
+        private readonly IEmpresaRepositorio _empresaRepositorio;
+        private readonly IFornecedorRepositorio _fornecedorRepositorio;
 
 
-        public CadastrarFornecedorCasoDeUso(IOutputPort outputPort, IPessoaFactory pessoaFactory)
+        public CadastrarFornecedorCasoDeUso(IOutputPort outputPort,
+            IFornecedorFactory fornecedorFactory,
+            IEmpresaRepositorio empresaRepositorio,
+            IFornecedorRepositorio fornecedorRepositorio)
         {
             _outputPort = outputPort ?? throw new ArgumentNullException(nameof(outputPort));
-            _pessoaFactory = pessoaFactory ?? throw new ArgumentNullException(nameof(pessoaFactory));
+            _fornecedorFactory = fornecedorFactory ?? throw new ArgumentNullException(nameof(fornecedorFactory));
+            _empresaRepositorio = empresaRepositorio ?? throw new ArgumentNullException(nameof(empresaRepositorio));
+            _fornecedorRepositorio = fornecedorRepositorio ?? throw new ArgumentNullException(nameof(fornecedorRepositorio));
         }
 
         public async Task Execute(CadastrarFornecedorInput input)
@@ -32,8 +40,11 @@ namespace Application.CasosDeUso.CadastrarFornecedor
              else
                 pessoa = CriarPessoaFisica(input);
 
-
-
+            
+            if (_outputPort.Valid)
+            {
+                
+            }
         }
 
         private PessoaFisica CriarPessoaFisica(CadastrarFornecedorInput input)
@@ -43,7 +54,7 @@ namespace Application.CasosDeUso.CadastrarFornecedor
             if (cpf.Valido == false)
                 _outputPort.AddNotification("CPF inválido");
 
-            return _pessoaFactory.NovaPessoaFisica(input.Nome, input.RG, input.DataNascimento.Value, cpf);
+            return _fornecedorFactory.NovaPessoaFisica(input.Nome, input.RG, input.DataNascimento.Value, cpf);
         }
 
         private PessoaJuridica CriarPessoaJuridica(CadastrarFornecedorInput input)
@@ -53,7 +64,7 @@ namespace Application.CasosDeUso.CadastrarFornecedor
             if (cnpj.Valido == false)
                 _outputPort.AddNotification("CNPJ inválido");
 
-            return _pessoaFactory.NovaPessoaJuridica(input.Nome, cnpj);
+            return _fornecedorFactory.NovaPessoaJuridica(input.Nome, cnpj);
         }
 
         private bool ValidarSeInformadoRgEDataNascimentoPessoaFisica(CadastrarFornecedorInput input)

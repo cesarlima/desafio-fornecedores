@@ -5,7 +5,7 @@ using Domain.Fornecedores;
 
 namespace Infra.Entities
 {
-    public class EntityFactories : IEmpresaFactory, IPessoaFactory, IFornecedorFactory
+    public class EntityFactories : IEmpresaFactory, IFornecedorFactory
     {
         public Empresa NovaEmpresa(string uf, string nomeFantasia, Documento cnpj)
         {
