@@ -12,14 +12,8 @@ namespace WebApi.CasosDeUso.CadastrarEmpresa
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CadastrarEmpresaController : ControllerBase
+    public class EmpresasController : ControllerBase
     {
-        // GET: /<controller>/
-        public string Index()
-        {
-            return "Funciona";
-        }
-
 
         [HttpPost]
         public async Task<IActionResult> Post([FromServices]CadastrarEmpresaPresenter presenter,
