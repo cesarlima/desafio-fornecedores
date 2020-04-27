@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.CasosDeUso.CadastrarFornecedor;
 using Domain.Fornecedores;
+using Infra.Entities;
 using Moq;
 using Xunit;
 
@@ -12,7 +13,7 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
     {
         private readonly Mock<IOutputPort> _outputPortMock = new Mock<IOutputPort>();
         private readonly Mock<IPessoaFactory> _pessoaFactoryMock = new Mock<IPessoaFactory>();
-        private readonly IPessoaFactory _pessoaFactory = new PessoaFactory();
+        private readonly IPessoaFactory _pessoaFactory = new EntityFactories();
 
         [Fact]
         public async Task Deve_Adicionar_Notificacao_Se_Fornecedor_Pessoa_Fisica_Sem_Rg_E_Sem_Data_Nascimento()
