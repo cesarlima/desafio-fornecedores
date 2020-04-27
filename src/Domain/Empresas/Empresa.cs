@@ -8,13 +8,13 @@ namespace Domain.Empresas
         public Guid Id { get; protected set; }
         public string UF { get; protected set; }
         public string NomeFantasia { get; protected set; }
-        public Documento CNPJ { get; protected set; }
+        public CNPJ CNPJ { get; protected set; }
 
         protected Empresa()
         {
         }
 
-        public Empresa(string uf, string nomeFantasia, Documento cnpj)
+        public Empresa(string uf, string nomeFantasia, CNPJ cnpj)
         {
             this.Id = Guid.NewGuid();
             this.UF = uf;

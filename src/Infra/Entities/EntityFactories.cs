@@ -7,7 +7,7 @@ namespace Infra.Entities
 {
     public class EntityFactories : IEmpresaFactory, IFornecedorFactory
     {
-        public Empresa NovaEmpresa(string uf, string nomeFantasia, Documento cnpj)
+        public Empresa NovaEmpresa(string uf, string nomeFantasia, CNPJ cnpj)
         {
             return new Empresa(uf, nomeFantasia, cnpj);
         }
