@@ -24,6 +24,8 @@ namespace Domain.Fornecedores
             DataCadastro = DateTime.Now;
             _telefones = new List<Telefone>();
         }
+
+        public abstract string ObterNumeroCpfCnpj();
     }
 }
 

@@ -11,7 +11,7 @@ namespace Infra.Mapping
         {
             builder.Property(x => x.CPF)
                 .HasConversion(c => c.ToString(), c => new Domain.Common.ValueObjects.CPF(c))
-                .HasColumnType("varchar(11");
+                .HasColumnType("varchar(11)");
         }
     }
 }
