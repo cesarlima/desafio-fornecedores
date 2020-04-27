@@ -21,7 +21,7 @@ namespace Infra.Mapping
             .IsRequired();
 
             builder.Property(x => x.CNPJ)
-                .HasConversion(c => c.ToString(), c => new CNPJ(c))
+                .HasConversion(c => c.Numero, c => new Documento(c))
                 .HasColumnName("CNPJ")
                 .HasColumnType("varchar(14)");
         }

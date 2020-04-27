@@ -12,17 +12,6 @@ namespace WebApi.ConfigExtensions
 
             services.AddDbContext<Infra.Contexts.FornecedoresContext>(
                    options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-
-
-          
-            services.AddScoped<CasosDeUso.CadastrarEmpresa.CadastrarEmpresaPresenter, CasosDeUso.CadastrarEmpresa.CadastrarEmpresaPresenter>();
-            services.AddScoped<Application.CasosDeUso.CadastrarEmpresa.IOutputPort>(x => x.GetRequiredService<CasosDeUso.CadastrarEmpresa.CadastrarEmpresaPresenter>());
-            services.AddScoped<Domain.Empresas.IEmpresaRepositorio, Infra.Repositories.EmpresaRepositorio>();
-            services.AddScoped<Domain.Empresas.IEmpresaFactory, Infra.Entities.EntityFactories>();
-            
-
-            services.AddScoped<Application.CasosDeUso.CadastrarEmpresa.CadastrarEmpresaCasoDeUso, Application.CasosDeUso.CadastrarEmpresa.CadastrarEmpresaCasoDeUso>();
-            services.AddScoped<Application.Services.IUnitOfWork, Infra.Transaction.UnitOfWork>();
         }
     }
 }
