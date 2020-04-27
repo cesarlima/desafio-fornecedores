@@ -15,10 +15,10 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
     public class CadastrarFornecedorCasodeUsoTest
     {
         private readonly Mock<IOutputPort> _outputPortMock = new Mock<IOutputPort>();
-        private readonly Mock<IFornecedorFactory> _pessoaFactoryMock = new Mock<IFornecedorFactory>();
         private readonly Mock<IFornecedorRepositorio> _fornecedorRepositorioMock = new Mock<IFornecedorRepositorio>();
         private readonly Mock<IEmpresaRepositorio> _empresaRepositorioMock = new Mock<IEmpresaRepositorio>();
         private readonly Mock<IUnitOfWork> _uowMock = new Mock<IUnitOfWork>();
+        private readonly Mock<IFornecedorFactory> _fornecedorFactoryMock = new Mock<IFornecedorFactory>();
         private readonly IFornecedorFactory _fornecedorFactory = new EntityFactories();
         private readonly IEmpresaFactory _empresaFactory = new EntityFactories();
 
@@ -67,14 +67,19 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         public async Task Deve_Adicionar_Result_Corretamente()
         {
             var input = CriarCadastrarFornecedorInput();
-            var cnpj = new Domain.Common.ValueObjects.CNPJ(input.CpfCnpj);
-            var pessoaJuridica = _fornecedorFactory.NovaPessoaJuridica(input.Nome, new Domain.Common.ValueObjects.CNPJ(input.CpfCnpj));
-            var outputMock = new CadastrarFornecedorOutput(pessoaJuridica.Id, pessoaJuridica.Nome, pessoaJuridica.CNPJ.ToString(), pessoaJuridica.DataCadastro);
-            var sut = CriarSUT(fornecedorFactory:_fornecedorFactory);
-            //var empresa = _empresaFactory.NovaEmpresa("PR", "Engie",);
+            var cnpj = new CNPJ(input.CpfCnpj);
+            var pessoaJuridica = _fornecedorFactory.NovaPessoaJuridica(input.Nome, cnpj);
+            var empresa = _empresaFactory.NovaEmpresa("PR", "Engie", cnpj);
+            var fornecedor = _fornecedorFactory.NovoFornecedor(empresa, pessoaJuridica);
 
-            _pessoaFactoryMock.Setup(f => f.NovaPessoaJuridica(input.Nome, new Domain.Common.ValueObjects.CNPJ(input.CpfCnpj))).Returns(pessoaJuridica);
+            var outputMock = new CadastrarFornecedorOutput(fornecedor.Id, pessoaJuridica.Nome, pessoaJuridica.CNPJ.ToString(), pessoaJuridica.DataCadastro);
+            var sut = CriarSUT(fornecedorFactoryMock: _fornecedorFactoryMock);
+            
+            _empresaRepositorioMock.Setup(x => x.ObterEmpresa(input.EmpresaId)).Returns(Task.FromResult(empresa));
+            _fornecedorFactoryMock.Setup(f => f.NovaPessoaJuridica(input.Nome, new CNPJ(input.CpfCnpj))).Returns(pessoaJuridica);
+            _fornecedorFactoryMock.Setup(f => f.NovoFornecedor(empresa, pessoaJuridica)).Returns(fornecedor);
             _outputPortMock.Setup(p => p.Valid).Returns(true);
+
             CadastrarFornecedorOutput result = null;
             _outputPortMock.Setup(presenter => presenter.AddResult(It.IsAny<CadastrarFornecedorOutput>()))
            .Callback((CadastrarFornecedorOutput r) => result = r);
@@ -82,19 +87,19 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
             await sut.Execute(input);
 
             Assert.Equal(outputMock.Id, result?.Id);
-            Assert.Equal(outputMock.Nome, result?.Nome);
             Assert.Equal(outputMock.CpfCnpj, result?.CpfCnpj);
+            Assert.Equal(outputMock.Nome, result?.Nome);
             Assert.Equal(outputMock.DataCadastro, result?.DataCadastro);
         }
 
         private CadastrarFornecedorCasoDeUso CriarSUT(Mock<IOutputPort> outputPortMock = null,
-                                                      IFornecedorFactory fornecedorFactory = null,
+                                                      Mock<IFornecedorFactory> fornecedorFactoryMock = null,
                                                       Mock<IEmpresaRepositorio> empresaRepositorioMock = null,
                                                       Mock<IFornecedorRepositorio> fornecedorRepositorioMock = null,
                                                       Mock<IUnitOfWork> uowMock = null)
         {
             return new CadastrarFornecedorCasoDeUso(outputPortMock?.Object ?? _outputPortMock.Object,
-                                                    fornecedorFactory ?? _fornecedorFactory,
+                                                    fornecedorFactoryMock?.Object ?? _fornecedorFactory,
                                                     empresaRepositorioMock?.Object ?? _empresaRepositorioMock.Object,
                                                     fornecedorRepositorioMock?.Object ?? _fornecedorRepositorioMock.Object,
                                                     uowMock?.Object ?? _uowMock.Object);
