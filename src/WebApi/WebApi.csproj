@@ -19,6 +19,7 @@
   <ItemGroup>
     <Folder Include="ConfigExtensions\" />
     <Folder Include="CasosDeUso\" />
+    <Folder Include="CasosDeUso\CadastrarEmpresa\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3">

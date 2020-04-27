@@ -37,13 +37,11 @@ namespace Application.CasosDeUso.CadastrarFornecedor
             if (ValidarSeFornecedorPessoaFisicaDoParanaMaiorDeIdade(input) == false)
                 return;
 
-            Pessoa pessoa = null;
-
+            Pessoa pessoa;
             if (input.PessoaJuridica)
                 pessoa = CriarPessoaJuridica(input);
              else
                 pessoa = CriarPessoaFisica(input);
-
 
             if (_outputPort.Valid)
             {
