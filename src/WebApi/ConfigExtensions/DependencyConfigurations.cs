@@ -15,13 +15,17 @@ namespace WebApi.ConfigExtensions
 
 
           
-            services.AddScoped<CasosDeUso.CadastrarEmpresa.CadastrarEmpresaPresenter, CasosDeUso.CadastrarEmpresa.CadastrarEmpresaPresenter>();
+            services.AddScoped<CasosDeUso.ListarEmpresas.ListarEmpresasPresenter>();
+            services.AddScoped<Application.CasosDeUso.ListarEmpresas.IListarEmpresasPresenter>(x => x.GetRequiredService<CasosDeUso.ListarEmpresas.ListarEmpresasPresenter>());
+
+            services.AddScoped<CasosDeUso.CadastrarEmpresa.CadastrarEmpresaPresenter>();
             services.AddScoped<Application.CasosDeUso.CadastrarEmpresa.IOutputPort>(x => x.GetRequiredService<CasosDeUso.CadastrarEmpresa.CadastrarEmpresaPresenter>());
+
             services.AddScoped<Domain.Empresas.IEmpresaRepositorio, Infra.Repositories.EmpresaRepositorio>();
             services.AddScoped<Domain.Empresas.IEmpresaFactory, Infra.Entities.EntityFactories>();
             
 
-            services.AddScoped<Application.CasosDeUso.CadastrarEmpresa.CadastrarEmpresaCasoDeUso, Application.CasosDeUso.CadastrarEmpresa.CadastrarEmpresaCasoDeUso>();
+            services.AddScoped<Application.CasosDeUso.CadastrarEmpresa.CadastrarEmpresaCasoDeUso>();
             services.AddScoped<Application.Services.IUnitOfWork, Infra.Transaction.UnitOfWork>();
         }
     }
