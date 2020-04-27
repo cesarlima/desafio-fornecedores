@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Common.ValueObjects;
 using Domain.Empresas;
@@ -25,6 +26,12 @@ namespace Infra.Repositories
         {
             var empresa = await _context.Empresas.FindAsync(id);
             return empresa;
+        }
+
+        public async Task<IEnumerable<Empresa>> ObterEmpresas()
+        {
+            var empresas = await _context.Empresas.AsNoTracking().ToListAsync();
+            return empresas;
         }
 
         public async Task Save(Empresa empresa)
