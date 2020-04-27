@@ -25,5 +25,10 @@ namespace Domain.Fornecedores
             CPF = cpf;
             PessoaTipo = PessoaTipo.PessoaFisica;
         }
+
+        public override string ObterNumeroCpfCnpj()
+        {
+            return CPF.ToString();
+        }
     }
 }

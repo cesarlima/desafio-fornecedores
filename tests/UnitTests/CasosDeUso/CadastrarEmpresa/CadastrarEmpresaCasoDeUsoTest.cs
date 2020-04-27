@@ -50,10 +50,10 @@ namespace UnitTests.CasosDeUso.CadastrarEmpresa
         [Fact]
         public async Task Deve_Adicionar_Notificacao_Se_CNPJ_Ja_Cadastrado()
         {
-            const string cnpj = "33.194.965/0001-11";
+            var cnpj = new Domain.Common.ValueObjects.CNPJ("33.194.965/0001-11");
             var sut = new CadastrarEmpresaCasoDeUso(_empresaPresenterMock.Object, _empresaRepositorioMock.Object, _empresaFactory, _uow.Object);
             _empresaRepositorioMock.Setup(rep => rep.EmpresaJaCadastrada(cnpj)).ReturnsAsync(true);
-            await sut.Execute(new CadastrarEmpresaInput("any_uf", "any_empresa", cnpj));
+            await sut.Execute(new CadastrarEmpresaInput("any_uf", "any_empresa", cnpj.ToString()));
 
             _empresaPresenterMock.Verify(presenter => presenter.AddNotification("CNPJ já cadastrado"), Times.Once());
         }
