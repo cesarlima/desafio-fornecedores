@@ -16,10 +16,5 @@ namespace Domain.Fornecedores
         }
 
         protected PessoaJuridica() { }
-
-        public override string ObterNumeroCpfCnpj()
-        {
-            return CNPJ.ToString();
-        }
     }
 }

@@ -26,12 +26,12 @@ namespace Application.CasosDeUso.CadastrarEmpresa
 
         public async Task Execute(CadastrarEmpresaInput input)
         {
-            var cnpj = new CNPJ(input.CNPJ);
+            var cnpj = new Documento(input.CNPJ);
 
             if (cnpj.Valido == false)
                 _outputPort.AddNotification("CNPJ inválido");
 
-            if ((await _empresaRepositorio.EmpresaJaCadastrada(cnpj).ConfigureAwait(false)))
+            if ((await _empresaRepositorio.EmpresaJaCadastrada(cnpj.Numero).ConfigureAwait(false)) == false)
                 _outputPort.AddNotification("CNPJ já cadastrado");
 
             var empresa = _empresaFactory.NovaEmpresa(input.UF, input.NomeFantasia, cnpj);
@@ -40,7 +40,7 @@ namespace Application.CasosDeUso.CadastrarEmpresa
 
             await _unitOfWork.Commit();
 
-            _outputPort.AddResult(new CadastrarEmpresaOutput(empresa.Id, empresa.UF, empresa.NomeFantasia, empresa.CNPJ.ToString()));
+            _outputPort.AddResult(new CadastrarEmpresaOutput(empresa.Id, empresa.UF, empresa.NomeFantasia, empresa.CNPJ.Numero));
         }
     }
 }
