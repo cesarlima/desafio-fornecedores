@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace Application.CasosDeUso
 {
-    public interface IUseCase<in T>
+    public interface IUseCase<T>
     {
          Task Execute(T input);
     }
