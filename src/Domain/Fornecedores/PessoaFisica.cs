@@ -12,23 +12,36 @@ namespace Domain.Fornecedores
 
         public CPF CPF  { get; protected set; }
 
-        protected PessoaFisica()
-        {
-
-        }
-
+        protected PessoaFisica() { }
+        
         public PessoaFisica(string nome, string rg, DateTime dataNascimento, CPF cpf)
             : base(nome)
         {
-            RG = rg ?? throw new ArgumentNullException(nameof(rg));
+            RG = rg;
             DataNascimento = dataNascimento;
             CPF = cpf;
             PessoaTipo = PessoaTipo.PessoaFisica;
+
+            Validar();
         }
 
         public override string ObterNumeroCpfCnpj()
         {
             return CPF.ToString();
+        }
+
+        protected override void Validar()
+        {
+            if (CPF.Valido == false)
+            {
+                AdicionarNotificacao("CPF inválido");
+            }
+
+            if (string.IsNullOrEmpty(RG))
+                AdicionarNotificacao("RG é obrigatório");
+
+            if (DataNascimento == DateTime.MinValue)
+                AdicionarNotificacao("Data de nascimento é obrigatório");
         }
     }
 }

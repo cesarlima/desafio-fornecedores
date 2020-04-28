@@ -1,5 +1,4 @@
-﻿using System;
-using Domain.Common.ValueObjects;
+﻿using Domain.Common.ValueObjects;
 using Domain.Fornecedores.ValueObject;
 
 namespace Domain.Fornecedores
@@ -13,6 +12,7 @@ namespace Domain.Fornecedores
         {
             CNPJ = cnpj;
             PessoaTipo = PessoaTipo.PessoaJuridica;
+            Validar();
         }
 
         protected PessoaJuridica() { }
@@ -20,6 +20,14 @@ namespace Domain.Fornecedores
         public override string ObterNumeroCpfCnpj()
         {
             return CNPJ.ToString();
+        }
+
+        protected override void Validar()
+        {
+            if (CNPJ.Valido == false)
+            {
+                AdicionarNotificacao("CNPJ inválido");
+            }
         }
     }
 }

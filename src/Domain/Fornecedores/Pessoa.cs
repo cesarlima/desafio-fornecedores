@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Domain.Common;
 using Domain.Fornecedores.ValueObject;
 
 namespace Domain.Fornecedores
 {
-    public abstract class Pessoa
+    public abstract class Pessoa : Entidade
     {
-        public Guid Id { get; protected set; }
         public string Nome { get; protected set; }
         public DateTime DataCadastro { get; protected set; }
         private readonly List<Telefone> _telefones;

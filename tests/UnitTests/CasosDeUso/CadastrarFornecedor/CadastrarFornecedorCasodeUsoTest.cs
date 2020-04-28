@@ -26,57 +26,86 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         public async Task Deve_Adicionar_Notificacao_Se_Fornecedor_Pessoa_Fisica_Sem_Rg_E_Sem_Data_Nascimento()
         {
             var sut = CriarSUT();
-            var input = CriarCadastrarFornecedorInput(pessoaJuridica: false, rg: null, dataNascimento: null);
+            var empresa = CriarEmpresa();
+            
+            var input = CriarCadastrarFornecedorInput(pessoaJuridica: false, rg: null,cpfCnpj: "130.935.460-01", dataNascimento: null);
+            _empresaRepositorioMock.Setup(x => x.ObterEmpresa(input.EmpresaId)).Returns(Task.FromResult(empresa));
             await sut.Execute(input);
 
-            _outputPortMock.Verify(presenter => presenter.AddNotification("Fornecedor pessoa física deve informar o RG"), Times.Once());
-            _outputPortMock.Verify(presenter => presenter.AddNotification("Fornecedor pessoa física deve informar a data de nascimento"), Times.Once());
+            var notificacoes = new List<string>() { "RG é obrigatório", "Data de nascimento é obrigatório" };
+
+            _outputPortMock.Verify(presenter => presenter.AddNotifications(notificacoes), Times.Once());
         }
 
         [Fact]
         public async Task Deve_Adicionar_Notificacao_Caso_Empresa_Do_Parana_Com_Fornecedor_Pessoa_Fisica_Menor_De_Idade()
         {
             var sut = CriarSUT();
-            var input = CriarCadastrarFornecedorInput(pessoaJuridica: false, dataNascimento: new DateTime(2005, 3, 12));
+            var empresa = CriarEmpresa();
+            var input = CriarCadastrarFornecedorInput(pessoaJuridica: false, cpfCnpj: "130.935.460-01", dataNascimento: new DateTime(2005, 3, 11));
+
+            _empresaRepositorioMock.Setup(x => x.ObterEmpresa(input.EmpresaId)).Returns(Task.FromResult(empresa));
             await sut.Execute(input);
 
-            _outputPortMock.Verify(presenter => presenter.AddNotification("Não é permitido cadastrar fornecedor pessoa física menor de idade"), Times.Once());
+            var notificacoes = new List<string>() { "Não é permitido cadastrar fornecedor pessoa física menor de idade" };
+
+            _outputPortMock.Verify(presenter => presenter.AddNotifications(notificacoes), Times.Once());
         }
 
         [Fact]
         public async Task Deve_Adicionar_Notificacao_Se_CNPJ_Invalido()
         {
             var sut = CriarSUT();
+            var empresa = CriarEmpresa();
             var input = CriarCadastrarFornecedorInput(cpfCnpj: "1167289700011");
-            await sut.Execute(input);
+            _empresaRepositorioMock.Setup(x => x.ObterEmpresa(input.EmpresaId)).Returns(Task.FromResult(empresa));
 
-            _outputPortMock.Verify(presenter => presenter.AddNotification("CNPJ inválido"), Times.Once());
+            await sut.Execute(input);
+            var notificacoes = new List<string>() { "CNPJ inválido" };
+            _outputPortMock.Verify(presenter => presenter.AddNotifications(notificacoes), Times.Once());
         }
 
         [Fact]
         public async Task Deve_Adicionar_Notificacao_Se_CPF_Invalido()
         {
             var sut = CriarSUT();
+            var empresa = CriarEmpresa();
             var input = CriarCadastrarFornecedorInput(pessoaJuridica: false, cpfCnpj: "1167289700011", dataNascimento: new DateTime(1990, 3, 12));
+            _empresaRepositorioMock.Setup(x => x.ObterEmpresa(input.EmpresaId)).Returns(Task.FromResult(empresa));
             await sut.Execute(input);
 
-            _outputPortMock.Verify(presenter => presenter.AddNotification("CPF inválido"), Times.Once());
+            var notificacoes = new List<string>() { "CPF inválido" };
+            _outputPortMock.Verify(presenter => presenter.AddNotifications(notificacoes), Times.Once());
         }
+
+
+
+        [Fact]
+        public async Task Deve_Adicionar_Notificacao_Se_CNPJ_Ja_Cadastrado()
+        {
+            var sut = CriarSUT();
+            var input = CriarCadastrarFornecedorInput(cpfCnpj: "1167289700011");
+            await sut.Execute(input);
+
+            _outputPortMock.Verify(presenter => presenter.AddNotification("CNPJ já cadastrado"), Times.Once());
+        }
+
+       
 
         [Fact]
         public async Task Deve_Adicionar_Result_Corretamente()
         {
             var input = CriarCadastrarFornecedorInput();
             var cnpj = new CNPJ(input.CpfCnpj);
-            var pessoaJuridica = _fornecedorFactory.NovaPessoaJuridica(input.Nome, cnpj);
-            var empresa = _empresaFactory.NovaEmpresa("PR", "Engie", cnpj);
+            var pessoaJuridica = _fornecedorFactory.NovaPessoaJuridica(input.Nome, input.CpfCnpj);
+            var empresa = _empresaFactory.NovaEmpresa("PR", "Engie", input.CpfCnpj);
             var fornecedor = _fornecedorFactory.NovoFornecedor(empresa, pessoaJuridica);
 
             var outputMock = new CadastrarFornecedorOutput(fornecedor.Id, pessoaJuridica.Nome, pessoaJuridica.CNPJ.ToString(), pessoaJuridica.DataCadastro);
             var sut = CriarSUT(fornecedorFactoryMock: _fornecedorFactoryMock);
             
             _empresaRepositorioMock.Setup(x => x.ObterEmpresa(input.EmpresaId)).Returns(Task.FromResult(empresa));
-            _fornecedorFactoryMock.Setup(f => f.NovaPessoaJuridica(input.Nome, new CNPJ(input.CpfCnpj))).Returns(pessoaJuridica);
+            _fornecedorFactoryMock.Setup(f => f.NovaPessoaJuridica(input.Nome, input.CpfCnpj)).Returns(pessoaJuridica);
             _fornecedorFactoryMock.Setup(f => f.NovoFornecedor(empresa, pessoaJuridica)).Returns(fornecedor);
             _outputPortMock.Setup(p => p.Valid).Returns(true);
 
@@ -103,6 +132,11 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
                                                     empresaRepositorioMock?.Object ?? _empresaRepositorioMock.Object,
                                                     fornecedorRepositorioMock?.Object ?? _fornecedorRepositorioMock.Object,
                                                     uowMock?.Object ?? _uowMock.Object);
+        }
+
+        private Empresa CriarEmpresa()
+        {
+            return _empresaFactory.NovaEmpresa("PR", "Engie", "89.330.056/0001-18");
         }
 
         private CadastrarFornecedorInput CriarCadastrarFornecedorInput(Guid empresaId = new Guid(),

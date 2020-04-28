@@ -12,14 +12,15 @@ namespace Infra.Entities
             return new Empresa(uf, nomeFantasia, new CNPJ(cnpj));
         }
 
-        public PessoaFisica NovaPessoaFisica(string nome, string rg, DateTime dataNascimento, CPF cpf)
+        public PessoaFisica NovaPessoaFisica(string nome, string rg, DateTime? dataNascimento, string cpf)
         {
-            return new PessoaFisica(nome, rg, dataNascimento, cpf);
+            var nascimento = dataNascimento != null ? dataNascimento.Value : DateTime.MinValue;
+            return new PessoaFisica(nome, rg, nascimento, new CPF(cpf));
         }
 
-        public PessoaJuridica NovaPessoaJuridica(string nome, CNPJ cnpj)
+        public PessoaJuridica NovaPessoaJuridica(string nome, string cnpj)
         {
-            return new PessoaJuridica(nome, cnpj);
+            return new PessoaJuridica(nome, new CNPJ(cnpj));
         }
 
         public Fornecedor NovoFornecedor(Empresa empresa, Pessoa pessoa)

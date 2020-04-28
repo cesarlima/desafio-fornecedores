@@ -25,7 +25,7 @@ namespace Domain.Common
             _notificacoes.Add(mensagem);
         }
 
-        protected void AdicionarNotificacoes(List<string> notificacoes)
+        protected void AdicionarNotificacoes(IEnumerable<string> notificacoes)
         {
             _notificacoes.AddRange(notificacoes);
         }
