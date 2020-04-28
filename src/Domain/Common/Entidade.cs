@@ -18,6 +18,8 @@ namespace Domain.Common
             Id = Guid.NewGuid();
         }
 
+        protected abstract void Validar();
+
         protected void AdicionarNotificacao(string mensagem)
         {
             _notificacoes.Add(mensagem);

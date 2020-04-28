@@ -1,11 +1,11 @@
 using System;
+using Domain.Common;
 using Domain.Common.ValueObjects;
 
 namespace Domain.Empresas
 {
-    public class Empresa
+    public class Empresa : Entidade
     {
-        public Guid Id { get; protected set; }
         public string UF { get; protected set; }
         public string NomeFantasia { get; protected set; }
         public CNPJ CNPJ { get; protected set; }
@@ -16,10 +16,11 @@ namespace Domain.Empresas
 
         public Empresa(string uf, string nomeFantasia, CNPJ cnpj)
         {
-            this.Id = Guid.NewGuid();
             this.UF = uf;
             this.NomeFantasia = nomeFantasia;
             this.CNPJ = cnpj;
+
+            Validar();
         }
 
         public override bool Equals(object obj)
@@ -29,5 +30,13 @@ namespace Domain.Empresas
         }
 
         public override int GetHashCode() => 2108858624 + Id.GetHashCode();
+
+        protected override void Validar()
+        {
+            if (CNPJ.Valido == false)
+            {
+                AdicionarNotificacao("CNPJ inválido");
+            }
+        }
     }
 }
