@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.CasosDeUso.CadastrarEmpresa;
 using Application.Services;
@@ -34,8 +35,8 @@ namespace UnitTests.CasosDeUso.CadastrarEmpresa
         {
             var sut = new CadastrarEmpresaCasoDeUso(_empresaPresenterMock.Object, _empresaRepositorioMock.Object, _empresaFactory, _uow.Object);
             await sut.Execute(new CadastrarEmpresaInput("any_uf", "any_empresa", "888"));
-
-            _empresaPresenterMock.Verify(presenter => presenter.AddNotification("CNPJ inválido"), Times.Once());
+            var notificacoes = new List<string>() { "CNPJ inválido" };
+            _empresaPresenterMock.Verify(presenter => presenter.AddNotifications(notificacoes), Times.Once());
         }
 
         [Fact]

@@ -35,6 +35,11 @@ namespace WebApi.CasosDeUso.CadastrarEmpresa
             _notificacoes.Add(message);
         }
 
+        public void AddNotifications(IEnumerable<string> messages)
+        {
+            _notificacoes.AddRange(messages);
+        }
+
         public void AddResult(CadastrarEmpresaOutput output)
         {
             _viewModel = new ObjectResult(output);

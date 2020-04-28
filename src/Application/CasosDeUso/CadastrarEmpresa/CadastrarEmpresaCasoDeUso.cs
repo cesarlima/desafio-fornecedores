@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Application.Services;
-using Domain.Common.ValueObjects;
 using Domain.Empresas;
 
 namespace Application.CasosDeUso.CadastrarEmpresa
@@ -26,25 +25,25 @@ namespace Application.CasosDeUso.CadastrarEmpresa
 
         public async Task Execute(CadastrarEmpresaInput input)
         {
-            var cnpj = new CNPJ(input.CNPJ);
+            var empresa = _empresaFactory.NovaEmpresa(input.UF, input.NomeFantasia, input.CNPJ);
 
-            if (cnpj.Valido == false)
-                _outputPort.AddNotification("CNPJ inválido");
-
-            if ((await _empresaRepositorio.EmpresaJaCadastrada(cnpj).ConfigureAwait(false)))
-                _outputPort.AddNotification("CNPJ já cadastrado");
-
-
-            if (_outputPort.Valid)
+            if (empresa.Invalido)
             {
-                var empresa = _empresaFactory.NovaEmpresa(input.UF, input.NomeFantasia, cnpj);
-
-                await _empresaRepositorio.Save(empresa).ConfigureAwait(false);
-
-                await _unitOfWork.Commit();
-
-                _outputPort.AddResult(new CadastrarEmpresaOutput(empresa.Id, empresa.UF, empresa.NomeFantasia, empresa.CNPJ.ToString()));
+                _outputPort.AddNotifications(empresa.Notificacoes);
+                return;
             }
+
+            if (await _empresaRepositorio.EmpresaJaCadastrada(empresa.CNPJ))
+            {
+                _outputPort.AddNotification("CNPJ já cadastrado");
+                return;
+            }
+                
+            await _empresaRepositorio.Save(empresa).ConfigureAwait(false);
+
+            await _unitOfWork.Commit();
+
+            _outputPort.AddResult(new CadastrarEmpresaOutput(empresa.Id, empresa.UF, empresa.NomeFantasia, empresa.CNPJ.ToString()));
         }
     }
 }

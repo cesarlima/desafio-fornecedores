@@ -36,6 +36,11 @@ namespace WebApi.CasosDeUso.CadastrarFornecedor
             _notificacoes.Add(message);
         }
 
+        public void AddNotifications(IEnumerable<string> messages)
+        {
+            _notificacoes.AddRange(messages);
+        }
+
         public void AddResult(CadastrarFornecedorOutput output)
         {
             _viewModel = new ObjectResult(output);

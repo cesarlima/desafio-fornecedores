@@ -35,6 +35,11 @@ namespace WebApi.CasosDeUso.ListarEmpresas
             _notificacoes.Add(message);
         }
 
+        public void AddNotifications(IEnumerable<string> messages)
+        {
+            _notificacoes.AddRange(messages);
+        }
+
         public void AddResult(ListarEmpresaOutput output)
         {
             _viewModel = new ObjectResult(output);
