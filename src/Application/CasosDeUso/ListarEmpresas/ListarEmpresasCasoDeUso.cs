@@ -8,9 +8,9 @@ namespace Application.CasosDeUso.ListarEmpresas
     public class ListarEmpresasCasoDeUso : IUseCase<ListarEmpresaInput>
     {
         private readonly IEmpresaRepositorio _empresaRepositorio;
-        private readonly IListarEmpresasPresenter _presenter;
+        private readonly IOutputPort _presenter;
 
-        public ListarEmpresasCasoDeUso(IEmpresaRepositorio empresaRepositorio, IListarEmpresasPresenter presenter)
+        public ListarEmpresasCasoDeUso(IEmpresaRepositorio empresaRepositorio, IOutputPort presenter)
         {
             _empresaRepositorio = empresaRepositorio ?? throw new ArgumentNullException(nameof(empresaRepositorio));
             _presenter = presenter ?? throw new ArgumentNullException(nameof(presenter));

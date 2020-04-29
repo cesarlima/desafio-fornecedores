@@ -14,7 +14,7 @@ namespace WebApi.ConfigExtensions
 
 
             services.AddScoped<CasosDeUso.ListarEmpresas.ListarEmpresasPresenter>();
-            services.AddScoped<Application.CasosDeUso.ListarEmpresas.IListarEmpresasPresenter>(x => x.GetRequiredService<CasosDeUso.ListarEmpresas.ListarEmpresasPresenter>());
+            services.AddScoped<Application.CasosDeUso.ListarEmpresas.IOutputPort>(x => x.GetRequiredService<CasosDeUso.ListarEmpresas.ListarEmpresasPresenter>());
 
             services.AddScoped<CasosDeUso.CadastrarEmpresa.CadastrarEmpresaPresenter>();
             services.AddScoped<Application.CasosDeUso.CadastrarEmpresa.IOutputPort>(x => x.GetRequiredService<CasosDeUso.CadastrarEmpresa.CadastrarEmpresaPresenter>());

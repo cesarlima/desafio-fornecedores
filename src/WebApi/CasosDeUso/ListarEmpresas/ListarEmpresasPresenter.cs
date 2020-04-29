@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.CasosDeUso.ListarEmpresas
 {
-    public class ListarEmpresasPresenter : IListarEmpresasPresenter
+    public class ListarEmpresasPresenter : IOutputPort
     {
         private IActionResult _viewModel;
         private List<string> _notificacoes = new List<string>();
