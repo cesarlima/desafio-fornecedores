@@ -8,6 +8,7 @@
     <Folder Include="Services\" />
     <Folder Include="CasosDeUso\CadastrarFornecedor\" />
     <Folder Include="CasosDeUso\ListarEmpresas\" />
+    <Folder Include="CasosDeUso\ListarFornecedores\" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>

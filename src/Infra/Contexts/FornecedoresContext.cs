@@ -12,6 +12,8 @@ namespace Infra.Contexts
 
         public DbSet<Empresa> Empresas { get; set; }
         public DbSet<Fornecedor> Fornecedors { get; set; }
+        public DbSet<PessoaFisica> PessoaFisicas { get; set; }
+        public DbSet<PessoaJuridica> PessoaJuridicas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
