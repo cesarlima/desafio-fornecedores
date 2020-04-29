@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.CasosDeUso.CadastrarEmpresa;
 using Application.Services;
+using Domain.Common;
 using Domain.Empresas;
-using Infra.Entities;
 using Moq;
 using Xunit;
 
@@ -15,7 +15,7 @@ namespace UnitTests.CasosDeUso.CadastrarEmpresa
         private readonly Mock<IOutputPort> _empresaPresenterMock = new Mock<IOutputPort>();
         private Mock<IEmpresaRepositorio> _empresaRepositorioMock = new Mock<IEmpresaRepositorio>();
         private Mock<IUnitOfWork> _uow = new Mock<IUnitOfWork>();
-        private IEmpresaFactory _empresaFactory = new EntityFactories();
+        private IEmpresaFactory _empresaFactory = new EntidadeFactories();
 
 
         [Fact]

@@ -27,8 +27,8 @@ namespace WebApi.ConfigExtensions
 
             services.AddScoped<Domain.Empresas.IEmpresaRepositorio, Infra.Repositories.EmpresaRepositorio>();
             services.AddScoped<Domain.Fornecedores.IFornecedorRepositorio, Infra.Repositories.FornecedorRepositorio>();
-            services.AddScoped<Domain.Empresas.IEmpresaFactory, Infra.Entities.EntityFactories>();
-            services.AddScoped<Domain.Fornecedores.IFornecedorFactory, Infra.Entities.EntityFactories>();
+            services.AddScoped<Domain.Empresas.IEmpresaFactory, Domain.Common.EntidadeFactories>();
+            services.AddScoped<Domain.Fornecedores.IFornecedorFactory, Domain.Common.EntidadeFactories>();
 
             
             services.AddScoped<Application.CasosDeUso.CadastrarEmpresa.CadastrarEmpresaCasoDeUso>();

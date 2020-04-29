@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using Domain.Common.ValueObjects;
 using Domain.Empresas;
 using Domain.Fornecedores;
 
-namespace Infra.Entities
+namespace Domain.Common
 {
-    public class EntityFactories : IEmpresaFactory, IFornecedorFactory
+    public class EntidadeFactories : IEmpresaFactory, IFornecedorFactory
     {
         public Empresa NovaEmpresa(string uf, string nomeFantasia, string cnpj)
         {

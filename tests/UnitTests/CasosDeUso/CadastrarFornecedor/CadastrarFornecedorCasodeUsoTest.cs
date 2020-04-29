@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.CasosDeUso.CadastrarFornecedor;
 using Application.Services;
+using Domain.Common;
 using Domain.Common.ValueObjects;
 using Domain.Empresas;
 using Domain.Fornecedores;
-using Infra.Entities;
 using Moq;
 using Xunit;
 
@@ -19,8 +19,8 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         private readonly Mock<IEmpresaRepositorio> _empresaRepositorioMock = new Mock<IEmpresaRepositorio>();
         private readonly Mock<IUnitOfWork> _uowMock = new Mock<IUnitOfWork>();
         private readonly Mock<IFornecedorFactory> _fornecedorFactoryMock = new Mock<IFornecedorFactory>();
-        private readonly IFornecedorFactory _fornecedorFactory = new EntityFactories();
-        private readonly IEmpresaFactory _empresaFactory = new EntityFactories();
+        private readonly IFornecedorFactory _fornecedorFactory = new EntidadeFactories();
+        private readonly IEmpresaFactory _empresaFactory = new EntidadeFactories();
 
         [Fact]
         public async Task Deve_Adicionar_Notificacao_Se_Fornecedor_Pessoa_Fisica_Sem_Rg_E_Sem_Data_Nascimento()
