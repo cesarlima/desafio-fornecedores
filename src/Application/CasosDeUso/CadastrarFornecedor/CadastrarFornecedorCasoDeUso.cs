@@ -31,10 +31,30 @@ namespace Application.CasosDeUso.CadastrarFornecedor
         {
             Pessoa pessoa;
             if (input.PessoaJuridica)
-                pessoa = _fornecedorFactory.NovaPessoaJuridica(input.Nome, input.CpfCnpj);
-            else
-                pessoa = _fornecedorFactory.NovaPessoaFisica(input.Nome, input.RG, input.DataNascimento, input.CpfCnpj);
+            {
+                var pessoaJuridica = _fornecedorFactory.NovaPessoaJuridica(input.Nome, input.CpfCnpj);
 
+                if (await _fornecedorRepositorio.PessoaJuridicaCadastrada(pessoaJuridica.CNPJ))
+                {
+                    _outputPort.AddNotification($"CNPJ {pessoaJuridica.CNPJ} já cadastrado");
+                    return;
+                }
+
+                pessoa = pessoaJuridica;
+            }
+            else
+            {
+                var pessoaFisica = _fornecedorFactory.NovaPessoaFisica(input.Nome, input.RG, input.DataNascimento, input.CpfCnpj);
+
+                if (await _fornecedorRepositorio.PessoaFisicaCadastrada(pessoaFisica.CPF))
+                {
+                    _outputPort.AddNotification($"CPF {pessoaFisica.CPF} já cadastrado");
+                    return;
+                }
+
+                pessoa = pessoaFisica;
+            }
+                
             var empresa = await _empresaRepositorio.ObterEmpresa(input.EmpresaId);
             var fornecedor = _fornecedorFactory.NovoFornecedor(empresa, pessoa);
 

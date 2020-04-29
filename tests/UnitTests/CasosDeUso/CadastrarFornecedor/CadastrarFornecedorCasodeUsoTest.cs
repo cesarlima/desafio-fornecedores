@@ -78,19 +78,31 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
             _outputPortMock.Verify(presenter => presenter.AddNotifications(notificacoes), Times.Once());
         }
 
-
-
         [Fact]
         public async Task Deve_Adicionar_Notificacao_Se_CNPJ_Ja_Cadastrado()
         {
+            var cnpj = new CNPJ("1167289700011");
+            _fornecedorRepositorioMock.Setup(f => f.PessoaJuridicaCadastrada(cnpj)).Returns(Task.FromResult(true));
+
             var sut = CriarSUT();
             var input = CriarCadastrarFornecedorInput(cpfCnpj: "1167289700011");
             await sut.Execute(input);
 
-            _outputPortMock.Verify(presenter => presenter.AddNotification("CNPJ já cadastrado"), Times.Once());
+            _outputPortMock.Verify(presenter => presenter.AddNotification($"CNPJ {cnpj} já cadastrado"), Times.Once());
         }
 
-       
+        [Fact]
+        public async Task Deve_Adicionar_Notificacao_Se_CPF_Ja_Cadastrado()
+        {
+            var cpf = new CPF("89071787044");
+            _fornecedorRepositorioMock.Setup(f => f.PessoaFisicaCadastrada(cpf)).Returns(Task.FromResult(true));
+
+            var sut = CriarSUT();
+            var input = CriarCadastrarFornecedorInput(pessoaJuridica:false, cpfCnpj: "89071787044", dataNascimento: new DateTime(1990, 3, 12));
+            await sut.Execute(input);
+
+            _outputPortMock.Verify(presenter => presenter.AddNotification($"CPF {cpf} já cadastrado"), Times.Once());
+        }
 
         [Fact]
         public async Task Deve_Adicionar_Result_Corretamente()

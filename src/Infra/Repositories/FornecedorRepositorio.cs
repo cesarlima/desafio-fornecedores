@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Common.ValueObjects;
 using Domain.Fornecedores;
 using Infra.Contexts;
 using Microsoft.Data.SqlClient;
@@ -53,6 +54,16 @@ namespace Infra.Repositories
             //var sql = result.ToSql();
             var fornecedores = await result.ToListAsync();
             return fornecedores;
+        }
+
+        public async Task<bool> PessoaJuridicaCadastrada(CNPJ cnpj)
+        {
+            return await _context.PessoasJuridicas.AnyAsync(p => p.CNPJ.Equals(cnpj));
+        }
+
+        public async Task<bool> PessoaFisicaCadastrada(CPF cpf)
+        {
+            return await _context.PessoasFisicas.AnyAsync(p => p.CPF.Equals(cpf));
         }
     }
 }
