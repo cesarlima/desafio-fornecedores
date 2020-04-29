@@ -15,7 +15,7 @@ namespace WebApi.CasosDeUso.ListarEmpresas
     {
 
         [HttpGet]
-        public async Task<IActionResult> Ge([FromServices]ListarEmpresasPresenter presenter,
+        public async Task<IActionResult> Get([FromServices]ListarEmpresasPresenter presenter,
             [FromServices]ListarEmpresasCasoDeUso casoDeUso)
         {
             await casoDeUso.Execute(new ListarEmpresaInput());

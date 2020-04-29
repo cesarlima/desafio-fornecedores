@@ -22,6 +22,7 @@
     <Folder Include="CasosDeUso\CadastrarEmpresa\" />
     <Folder Include="CasosDeUso\ListarEmpresas\" />
     <Folder Include="CasosDeUso\CadastrarFornecedor\" />
+    <Folder Include="CasosDeUso\ListarFornecedores\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3">
