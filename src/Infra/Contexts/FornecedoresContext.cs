@@ -8,12 +8,11 @@ namespace Infra.Contexts
     public class FornecedoresContext : DbContext
     {
         public FornecedoresContext(DbContextOptions<FornecedoresContext> options) : base(options) { }
-        public FornecedoresContext() { }
 
         public DbSet<Empresa> Empresas { get; set; }
-        public DbSet<Fornecedor> Fornecedors { get; set; }
-        public DbSet<PessoaFisica> PessoaFisicas { get; set; }
-        public DbSet<PessoaJuridica> PessoaJuridicas { get; set; }
+        public DbSet<Fornecedor> Fornecedores { get; set; }
+        //public DbSet<PessoaFisica> PessoaFisicas { get; set; }
+        //public DbSet<PessoaJuridica> PessoaJuridicas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +21,7 @@ namespace Infra.Contexts
             modelBuilder.ApplyConfiguration(new PessoaFisicaMap());
             modelBuilder.ApplyConfiguration(new PessoaJuridicaMap());
             modelBuilder.ApplyConfiguration(new FornecedorMap());
+            modelBuilder.ApplyConfiguration(new TelefoneMap());
         }
     }
 }

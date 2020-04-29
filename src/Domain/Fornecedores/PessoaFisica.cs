@@ -7,9 +7,7 @@ namespace Domain.Fornecedores
     public  class PessoaFisica : Pessoa
     {
         public string RG { get; protected set; }
-
         public DateTime DataNascimento { get; protected set;  }
-
         public CPF CPF  { get; protected set; }
 
         protected PessoaFisica() { }

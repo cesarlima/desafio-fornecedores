@@ -88,14 +88,15 @@ namespace Infra.Migrations
                     b.HasDiscriminator<int>("PessoaTipo");
                 });
 
-            modelBuilder.Entity("Domain.Fornecedores.ValueObject.Telefone", b =>
+            modelBuilder.Entity("Domain.Fornecedores.Telefone", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Numero")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("varchar(20)");
 
                     b.Property<Guid?>("PessoaId")
                         .HasColumnType("uniqueidentifier");
@@ -150,7 +151,7 @@ namespace Infra.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Fornecedores.ValueObject.Telefone", b =>
+            modelBuilder.Entity("Domain.Fornecedores.Telefone", b =>
                 {
                     b.HasOne("Domain.Fornecedores.Pessoa", null)
                         .WithMany("Telefones")

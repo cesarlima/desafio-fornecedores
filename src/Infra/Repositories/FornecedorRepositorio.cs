@@ -20,7 +20,7 @@ namespace Infra.Repositories
 
         public async Task Salvar(Fornecedor fornecedor)
         {
-            await _context.Fornecedors.AddAsync(fornecedor);
+            await _context.Fornecedores.AddAsync(fornecedor);
         }
 
         public async Task<IEnumerable<Fornecedor>> ObterFornecedores(string nome, string cpfCnpj, DateTime? dataCadastro)
@@ -46,7 +46,7 @@ namespace Infra.Repositories
                             INNER JOIN Empresa e ON e.id = forn.empresaId
                             {clausulaWhere} ";
 
-            var result = _context.Fornecedors
+            var result = _context.Fornecedores
                 .FromSqlRaw(slquery, parametros.Values.ToArray())
                 .Include(f => f.Pessoa);
 
