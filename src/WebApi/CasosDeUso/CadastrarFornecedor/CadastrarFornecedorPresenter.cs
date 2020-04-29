@@ -26,11 +26,6 @@ namespace WebApi.CasosDeUso.CadastrarFornecedor
             }
         }
 
-        public void AddNotFoundMessage(string message)
-        {
-            _viewModel = new NotFoundObjectResult(message);
-        }
-
         public void AddNotification(string message)
         {
             _notificacoes.Add(message);

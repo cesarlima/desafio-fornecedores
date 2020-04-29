@@ -1,6 +1,6 @@
 namespace Application.CasosDeUso.CadastrarEmpresa
 {
-    public interface IOutputPort : IOutputPortStandard<CadastrarEmpresaOutput>, IOutputPortNotification, IOutputPortNotFound
+    public interface IOutputPort : IOutputPortStandard<CadastrarEmpresaOutput>, IOutputPortNotification
     {
     }
 }
