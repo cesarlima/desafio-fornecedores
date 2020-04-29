@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Domain.Fornecedores;
 using Infra.Contexts;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace Infra.Repositories
 {
@@ -24,19 +28,36 @@ namespace Infra.Repositories
 
         public async Task<IEnumerable<Fornecedor>> ObterFornecedores(string nome, string cpfCnpj, DateTime? dataCadastro)
         {
-            var fornecedores = await (from forn in _context.Set<Fornecedor>()
-                                from pf in _context.Set<PessoaFisica>().Where(p => p.Id == forn.Pessoa.Id).DefaultIfEmpty()
-                                from pj in _context.Set<PessoaJuridica>().Where(p => p.Id == forn.Pessoa.Id).DefaultIfEmpty()
-                                where
-                                     (nome == null || (pf.Nome == nome || pj.Nome == nome)) &&
-                                     (cpfCnpj == null || (pf.CPF.ToString() == cpfCnpj || pj.CNPJ.ToString() == cpfCnpj)) &&
-                                     (dataCadastro == null || (pf.DataCadastro.Date == dataCadastro.Value.Date
-                                                           || pj.DataCadastro.Date == dataCadastro.Value.Date))
-                                select forn)
-                                .Include(x => x.Pessoa)
-                                .ToListAsync();
+            var parametros = new Dictionary<string, object>();
 
+            if (string.IsNullOrEmpty(nome) == false)
+                parametros.Add("nome = @nome", new SqlParameter("@nome", nome));
+
+            if (string.IsNullOrEmpty(cpfCnpj) == false)
+                parametros.Add("(p.cpf = @cpfCnpj OR p.cnpj = @cpfCnpj)", new SqlParameter("@cpfCnpj", cpfCnpj));
+
+            if (dataCadastro != null)
+                parametros.Add("CONVERT(date, dataCadastro) = @dataCadastro", new SqlParameter("@dataCadastro", dataCadastro.Value.Date));
+
+            var clausulaWhere = parametros.Any() ? $" WHERE {string.Join(" AND ", parametros.Keys.ToList())}"  : "";
+
+            var slquery = @$"SELECT DISTINCT forn.id,
+                                    p.id AS pessoaId,
+                                    e.id AS empresaId
+                            FROM Fornecedor forn
+                            INNER JOIN Pessoa p ON p.id = forn.pessoaId
+                            INNER JOIN Empresa e ON e.id = forn.empresaId
+                            {clausulaWhere} ";
+
+            var result = _context.Fornecedors
+                .FromSqlRaw(slquery, parametros.Values.ToArray())
+                .Include(f => f.Pessoa);
+
+            //var sql = result.ToSql();
+            var fornecedores = await result.ToListAsync();
             return fornecedores;
         }
     }
 }
+
+

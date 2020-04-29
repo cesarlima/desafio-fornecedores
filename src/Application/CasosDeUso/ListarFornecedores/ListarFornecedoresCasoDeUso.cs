@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Fornecedores;
 
@@ -18,6 +19,14 @@ namespace Application.CasosDeUso.ListarFornecedores
         public async Task Execute(ListarFornecedoresInput input)
         {
             var fornecedores = await _fornecedorRepositorio.ObterFornecedores(input.Nome, input.CpfCnpj, input.DataCadastro);
+
+            var fornecedorOutput = new List<Fornecedor>();
+            foreach (var forn in fornecedores)
+            {
+                fornecedorOutput.Add(new Fornecedor(forn.Id, forn.Pessoa.Nome, forn.Pessoa.ObterNumeroCpfCnpj()));
+            }
+
+            _outputPort.AddResult(new ListarFornecedoresOutput(fornecedorOutput));
         }
     }
 }
