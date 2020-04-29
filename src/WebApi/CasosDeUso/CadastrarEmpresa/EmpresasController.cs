@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Application.CasosDeUso.CadastrarEmpresa;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApi.CasosDeUso.CadastrarEmpresa
 {
@@ -14,7 +8,6 @@ namespace WebApi.CasosDeUso.CadastrarEmpresa
     [Route("api/[controller]")]
     public class EmpresasController : ControllerBase
     {
-
         [HttpPost]
         public async Task<IActionResult> Post([FromServices]CadastrarEmpresaPresenter presenter,
             [FromServices]CadastrarEmpresaCasoDeUso casoDeUso,

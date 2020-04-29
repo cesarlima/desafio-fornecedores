@@ -10,7 +10,8 @@ namespace WebApi.CasosDeUso.ListarFornecedores
     {
         [HttpGet]
         public async Task<IActionResult> Get([FromServices]ListarFornecedoresPresenter presenter,
-             [FromServices]ListarFornecedoresCasoDeUso casoDeUso, [FromQuery]ListarFornecedoresRequest request)
+             [FromServices]ListarFornecedoresCasoDeUso casoDeUso,
+             [FromQuery]ListarFornecedoresRequest request)
         {
             await casoDeUso.Execute(new ListarFornecedoresInput(request.Nome, request.CpfCnpj, request.DataCadastro));
             return presenter.ViewModel;
