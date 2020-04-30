@@ -12,24 +12,24 @@ namespace UnitTests.Entidades
         public void Deve_Adicionar_Notificacao_Quando_Nome_Nao_Informado()
         {
             var cnpj = new CNPJ("64618571000177");
-            var pessoa = new PessoaJuridica(null, cnpj);
+            var sut = new PessoaJuridica(null, cnpj);
             var esperado = new List<string>() { "Nome é obrigatório" };
 
-            Assert.Equal(esperado, pessoa.Notificacoes);
+            Assert.Equal(esperado, sut.Notificacoes);
 
-            pessoa = new PessoaJuridica("", cnpj);
+            sut = new PessoaJuridica("", cnpj);
 
-            Assert.Equal(esperado, pessoa.Notificacoes);
+            Assert.Equal(esperado, sut.Notificacoes);
         }
 
         [Fact]
         public void Deve_Adicionar_Notificacao_Quando_CNPJ_Invalido()
         {
             var cnpj = new CNPJ("6461857100017");
-            var pessoa = new PessoaJuridica("nome", cnpj);
+            var sut = new PessoaJuridica("nome", cnpj);
             var esperado = new List<string>() { "CNPJ inválido" };
 
-            Assert.Equal(esperado, pessoa.Notificacoes);
+            Assert.Equal(esperado, sut.Notificacoes);
         }
     }
 }
