@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Domain.Fornecedores;
 
@@ -23,7 +24,10 @@ namespace Application.CasosDeUso.ListarFornecedores
             var fornecedorOutput = new List<Fornecedor>();
             foreach (var forn in fornecedores)
             {
-                fornecedorOutput.Add(new Fornecedor(forn.Id, forn.Pessoa.Nome, forn.Pessoa.ObterNumeroCpfCnpj()));
+                fornecedorOutput.Add(new Fornecedor(forn.Id,
+                                                    forn.Pessoa.Nome,
+                                                    forn.Pessoa.ObterNumeroCpfCnpj(),
+                                                    forn?.Pessoa?.Telefones.Select(x => x.Numero)));
             }
 
             _outputPort.AddResult(new ListarFornecedoresOutput(fornecedorOutput));

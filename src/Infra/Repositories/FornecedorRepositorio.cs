@@ -49,9 +49,10 @@ namespace Infra.Repositories
 
             var result = _context.Fornecedores
                 .FromSqlRaw(slquery, parametros.Values.ToArray())
-                .Include(f => f.Pessoa);
+                .Include(f => f.Pessoa)
+                .ThenInclude(p => p.Telefones);
 
-            //var sql = result.ToSql();
+            var sql = result.ToSql();
             var fornecedores = await result.ToListAsync();
             return fornecedores;
         }
