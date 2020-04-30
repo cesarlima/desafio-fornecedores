@@ -25,7 +25,3 @@ namespace Infra.Contexts
         }
     }
 }
-
-//https://docs.microsoft.com/pt-br/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli
-
-//https://github.com/dotnet-architecture/eShopOnWeb/issues/94

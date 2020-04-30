@@ -51,8 +51,7 @@ namespace Infra.Repositories
                 .FromSqlRaw(slquery, parametros.Values.ToArray())
                 .Include(f => f.Pessoa)
                 .ThenInclude(p => p.Telefones);
-
-            var sql = result.ToSql();
+                
             var fornecedores = await result.ToListAsync();
             return fornecedores;
         }
@@ -68,5 +67,3 @@ namespace Infra.Repositories
         }
     }
 }
-
-
