@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Domain.Common.ValueObjects;
 using Domain.Empresas;
 using Domain.Fornecedores;
@@ -12,15 +13,31 @@ namespace Domain.Common
             return new Empresa(uf, nomeFantasia, new CNPJ(cnpj));
         }
 
-        public PessoaFisica NovaPessoaFisica(string nome, string rg, DateTime? dataNascimento, string cpf)
+        public PessoaFisica NovaPessoaFisica(string nome, string rg, DateTime? dataNascimento, string cpf, IEnumerable<string> telefones)
         {
             var nascimento = dataNascimento != null ? dataNascimento.Value : DateTime.MinValue;
-            return new PessoaFisica(nome, rg, nascimento, new CPF(cpf));
+            var pessoa = new PessoaFisica(nome, rg, nascimento, new CPF(cpf));
+
+            if (telefones != null)
+            {
+                foreach (var numero in telefones)
+                    pessoa.AdicionarTelefone(new Telefone(numero));
+            }
+
+            return pessoa;
         }
 
-        public PessoaJuridica NovaPessoaJuridica(string nome, string cnpj)
+        public PessoaJuridica NovaPessoaJuridica(string nome, string cnpj, IEnumerable<string> telefones)
         {
-            return new PessoaJuridica(nome, new CNPJ(cnpj));
+            var pessoa = new PessoaJuridica(nome, new CNPJ(cnpj));
+
+            if (telefones != null)
+            {
+                foreach (var numero in telefones)
+                    pessoa.AdicionarTelefone(new Telefone(numero));
+            }
+            
+            return pessoa;
         }
 
         public Fornecedor NovoFornecedor(Empresa empresa, Pessoa pessoa)

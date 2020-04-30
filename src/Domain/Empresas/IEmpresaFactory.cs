@@ -1,5 +1,3 @@
-using Domain.Common.ValueObjects;
-
 namespace Domain.Empresas
 {
     public interface IEmpresaFactory

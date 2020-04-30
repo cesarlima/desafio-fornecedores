@@ -137,7 +137,7 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         {
             var input = CriarCadastrarFornecedorInput();
             var cnpj = new CNPJ(input.CpfCnpj);
-            var pessoaJuridica = _fornecedorFactory.NovaPessoaJuridica(input.Nome, input.CpfCnpj);
+            var pessoaJuridica = _fornecedorFactory.NovaPessoaJuridica(input.Nome, input.CpfCnpj, null);
             var empresa = _empresaFactory.NovaEmpresa("PR", "Engie", input.CpfCnpj);
             var fornecedor = _fornecedorFactory.NovoFornecedor(empresa, pessoaJuridica);
 
@@ -145,7 +145,7 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
             var sut = CriarSUT(fornecedorFactoryMock: _fornecedorFactoryMock);
             
             _empresaRepositorioMock.Setup(x => x.ObterEmpresa(input.EmpresaId)).Returns(Task.FromResult(empresa));
-            _fornecedorFactoryMock.Setup(f => f.NovaPessoaJuridica(input.Nome, input.CpfCnpj)).Returns(pessoaJuridica);
+            _fornecedorFactoryMock.Setup(f => f.NovaPessoaJuridica(input.Nome, input.CpfCnpj, new List<string>())).Returns(pessoaJuridica);
             _fornecedorFactoryMock.Setup(f => f.NovoFornecedor(empresa, pessoaJuridica)).Returns(fornecedor);
             _outputPortMock.Setup(p => p.Valid).Returns(true);
 

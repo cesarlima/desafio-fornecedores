@@ -26,6 +26,18 @@ namespace Domain.Fornecedores
         }
 
         public abstract string ObterNumeroCpfCnpj();
+
+        public void AdicionarTelefone(Telefone telefone)
+        {
+            if (telefone == null)
+                return;
+
+            if (telefone.Invalido)
+                AdicionarNotificacoes(telefone.Notificacoes);
+
+            if (_telefones.Contains(telefone) == false)
+                _telefones.Add(telefone);
+        }
     }
 }
 

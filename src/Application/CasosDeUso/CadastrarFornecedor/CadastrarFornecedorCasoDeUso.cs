@@ -32,7 +32,7 @@ namespace Application.CasosDeUso.CadastrarFornecedor
             Pessoa pessoa;
             if (input.PessoaJuridica)
             {
-                var pessoaJuridica = _fornecedorFactory.NovaPessoaJuridica(input.Nome, input.CpfCnpj);
+                var pessoaJuridica = _fornecedorFactory.NovaPessoaJuridica(input.Nome, input.CpfCnpj, input.Telefones);
 
                 if (await _fornecedorRepositorio.PessoaJuridicaCadastrada(pessoaJuridica.CNPJ))
                 {
@@ -44,7 +44,7 @@ namespace Application.CasosDeUso.CadastrarFornecedor
             }
             else
             {
-                var pessoaFisica = _fornecedorFactory.NovaPessoaFisica(input.Nome, input.RG, input.DataNascimento, input.CpfCnpj);
+                var pessoaFisica = _fornecedorFactory.NovaPessoaFisica(input.Nome, input.RG, input.DataNascimento, input.CpfCnpj, input.Telefones);
 
                 if (await _fornecedorRepositorio.PessoaFisicaCadastrada(pessoaFisica.CPF))
                 {
