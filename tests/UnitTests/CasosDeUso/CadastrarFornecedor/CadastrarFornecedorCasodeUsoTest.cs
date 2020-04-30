@@ -23,22 +23,37 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         private readonly IEmpresaFactory _empresaFactory = new EntidadeFactories();
 
         [Fact]
-        public async Task Deve_Adicionar_Notificacao_Se_Fornecedor_Pessoa_Fisica_Sem_Rg_E_Sem_Data_Nascimento()
+        public async Task Deve_Adicionar_Notificacao_Quando_Fornecedor_Pessoa_Fisica_Sem_RG()
         {
             var sut = CriarSUT();
             var empresa = CriarEmpresa();
             
-            var input = CriarCadastrarFornecedorInput(pessoaJuridica: false, rg: null,cpfCnpj: "130.935.460-01", dataNascimento: null);
+            var input = CriarCadastrarFornecedorInput(pessoaJuridica: false, rg: null, cpfCnpj: "130.935.460-01", dataNascimento: new DateTime(1990, 3, 12));
             _empresaRepositorioMock.Setup(x => x.ObterEmpresa(input.EmpresaId)).Returns(Task.FromResult(empresa));
             await sut.Execute(input);
 
-            var notificacoes = new List<string>() { "RG é obrigatório", "Data de nascimento é obrigatório" };
+            var notificacoes = new List<string>() { "RG é obrigatório" };
 
             _outputPortMock.Verify(presenter => presenter.AddNotifications(notificacoes), Times.Once());
         }
 
         [Fact]
-        public async Task Deve_Adicionar_Notificacao_Caso_Empresa_Do_Parana_Com_Fornecedor_Pessoa_Fisica_Menor_De_Idade()
+        public async Task Deve_Adicionar_Notificacao_Quando_Fornecedor_Pessoa_Fisica_Sem_Data_Nascimento()
+        {
+            var sut = CriarSUT();
+            var empresa = CriarEmpresa();
+
+            var input = CriarCadastrarFornecedorInput(pessoaJuridica: false, cpfCnpj: "130.935.460-01", dataNascimento: null);
+            _empresaRepositorioMock.Setup(x => x.ObterEmpresa(input.EmpresaId)).Returns(Task.FromResult(empresa));
+            await sut.Execute(input);
+
+            var notificacoes = new List<string>() { "Data de nascimento é obrigatório" };
+
+            _outputPortMock.Verify(presenter => presenter.AddNotifications(notificacoes), Times.Once());
+        }
+
+        [Fact]
+        public async Task Deve_Adicionar_Notificacao_Quando_Empresa_Do_Parana_Com_Fornecedor_Pessoa_Fisica_Menor_De_Idade()
         {
             var sut = CriarSUT();
             var empresa = CriarEmpresa();
@@ -53,7 +68,7 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         }
 
         [Fact]
-        public async Task Deve_Adicionar_Notificacao_Se_CNPJ_Invalido()
+        public async Task Deve_Adicionar_Notificacao_Quando_CNPJ_Invalido()
         {
             var sut = CriarSUT();
             var empresa = CriarEmpresa();
@@ -66,7 +81,7 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         }
 
         [Fact]
-        public async Task Deve_Adicionar_Notificacao_Se_CPF_Invalido()
+        public async Task Deve_Adicionar_Notificacao_Quando_CPF_Invalido()
         {
             var sut = CriarSUT();
             var empresa = CriarEmpresa();
@@ -79,7 +94,7 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         }
 
         [Fact]
-        public async Task Deve_Adicionar_Notificacao_Se_CNPJ_Ja_Cadastrado()
+        public async Task Deve_Adicionar_Notificacao_Quando_CNPJ_Ja_Cadastrado()
         {
             var cnpj = new CNPJ("1167289700011");
             _fornecedorRepositorioMock.Setup(f => f.PessoaJuridicaCadastrada(cnpj)).Returns(Task.FromResult(true));
@@ -92,7 +107,7 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         }
 
         [Fact]
-        public async Task Deve_Adicionar_Notificacao_Se_CPF_Ja_Cadastrado()
+        public async Task Deve_Adicionar_Notificacao_Quando_CPF_Ja_Cadastrado()
         {
             var cpf = new CPF("89071787044");
             _fornecedorRepositorioMock.Setup(f => f.PessoaFisicaCadastrada(cpf)).Returns(Task.FromResult(true));
@@ -105,7 +120,20 @@ namespace UnitTests.CasosDeUso.CadastrarFornecedor
         }
 
         [Fact]
-        public async Task Deve_Adicionar_Result_Corretamente()
+        public async Task Deve_Adicionar_Notificacao_Quando_Empresa_Informada_Nao_Existir()
+        {
+            var sut = CriarSUT();
+            var input = CriarCadastrarFornecedorInput(empresaId:Guid.NewGuid());
+
+            _empresaRepositorioMock.Setup(e => e.ObterEmpresa(input.EmpresaId)).Returns(Task.FromResult(default(Empresa)));
+
+            await sut.Execute(input);
+
+            _outputPortMock.Verify(presenter => presenter.AddNotification($"Empresa não encontrada"), Times.Once());
+        }
+
+        [Fact]
+        public async Task Deve_Adicionar_CadastrarFornecedorOutput_Corretamente_Quando_Fornecedor_Cadastrado()
         {
             var input = CriarCadastrarFornecedorInput();
             var cnpj = new CNPJ(input.CpfCnpj);

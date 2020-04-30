@@ -56,6 +56,13 @@ namespace Application.CasosDeUso.CadastrarFornecedor
             }
                 
             var empresa = await _empresaRepositorio.ObterEmpresa(input.EmpresaId);
+
+            if (empresa == null)
+            {
+                _outputPort.AddNotification("Empresa não encontrada");
+                return;
+            }
+
             var fornecedor = _fornecedorFactory.NovoFornecedor(empresa, pessoa);
 
             _outputPort.AddNotifications(fornecedor.Notificacoes);
