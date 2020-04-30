@@ -23,6 +23,9 @@ namespace Domain.Fornecedores
             Nome = nome;
             DataCadastro = DateTime.Now;
             _telefones = new List<Telefone>();
+
+            if (string.IsNullOrEmpty(Nome))
+                AdicionarNotificacao("Nome é obrigatório");
         }
 
         public abstract string ObterNumeroCpfCnpj();
