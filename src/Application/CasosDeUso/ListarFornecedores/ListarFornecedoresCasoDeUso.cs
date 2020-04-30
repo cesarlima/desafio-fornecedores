@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Fornecedores;
+using Domain.Fornecedores.ValueObject;
 
 namespace Application.CasosDeUso.ListarFornecedores
 {
@@ -27,6 +28,7 @@ namespace Application.CasosDeUso.ListarFornecedores
                 fornecedorOutput.Add(new Fornecedor(forn.Id,
                                                     forn.Pessoa.Nome,
                                                     forn.Pessoa.ObterNumeroCpfCnpj(),
+                                                    forn.Pessoa.PessoaTipo == PessoaTipo.PessoaJuridica,
                                                     forn?.Pessoa?.Telefones.Select(x => x.Numero)));
             }
 
