@@ -1,4 +1,3 @@
-using System;
 using Domain.Common;
 using Domain.Common.ValueObjects;
 
@@ -16,9 +15,9 @@ namespace Domain.Empresas
 
         public Empresa(string uf, string nomeFantasia, CNPJ cnpj)
         {
-            this.UF = uf;
-            this.NomeFantasia = nomeFantasia;
-            this.CNPJ = cnpj;
+            UF = uf;
+            NomeFantasia = nomeFantasia;
+            CNPJ = cnpj;
 
             Validar();
         }
@@ -34,9 +33,13 @@ namespace Domain.Empresas
         protected override void Validar()
         {
             if (CNPJ.Valido == false)
-            {
                 AdicionarNotificacao("CNPJ inválido");
-            }
+
+            if (string.IsNullOrEmpty(NomeFantasia))
+                AdicionarNotificacao("Nome fantasia é obrigatório");
+
+            if (string.IsNullOrEmpty(UF))
+                AdicionarNotificacao("UF é obrigatório");
         }
     }
 }

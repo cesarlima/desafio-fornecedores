@@ -22,5 +22,6 @@
 
   <ItemGroup>
     <Folder Include="CasosDeUso\CadastrarFornecedor\" />
+    <Folder Include="Entidades\" />
   </ItemGroup>
 </Project>
