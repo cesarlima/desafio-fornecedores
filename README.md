@@ -4,8 +4,8 @@ Web API para cadastrar e listar empresas e seus fornecedores
 
 ## Como executar
 
-1. No projeto *WebApi* configure a string de conexção que se encontra no arquivo *appsettings.json*.
-2. Com o terminal navegue até a pasta *FORNECEDORES*.
+1. No projeto *WebApi* configure a string de conexão que se encontra no arquivo **appsettings.json**.
+2. Com o terminal navegue até a pasta **FORNECEDORES**.
 3. Execute os seguintes comandos para criar o banco de dados e rodar a API:
 ```
 dotnet ef database update -p ./src/Infra/Infra.csproj -s ./src/WebApi/WebApi.csproj
