@@ -18,6 +18,12 @@ dotnet run -p ./src/WebApi/WebApi.csproj
 * .NET Core 3.1
 * SQL Server
 
+## Rodar os testes
+
+```
+dotnet test --logger "console;verbosity=detailed" ./tests/UnitTests/UnitTests.csproj
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
